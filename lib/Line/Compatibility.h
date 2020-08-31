@@ -1,5 +1,5 @@
-#ifndef Line_Compat
-#define Line_Compat
+#ifndef Line_Compatibity
+#define Line_Compatibity
 
 
 #include <Arduino.h>
@@ -12,4 +12,4 @@
 #define IOInteruptOff detachInterrupt
 
 
-#endif //Line_Compat
+#endif //Line_Compatibity

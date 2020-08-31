@@ -25,7 +25,7 @@ void Line::changeSetings(int *pinout, int *pinin, int transmisionmode, int bps, 
 	int oldAddr = _addr;
 
 	_transmisionMode = ((0 <= transmisionmode) and (transmisionmode < Transmision_Modes))? transmisionmode : oldTransmisionMode;
-	_bps = ((0 < bps) and (bps < 1000))? bps : 8;
+	_bps = ((0 < bps) and (bps < 1000))? bps : Buffer_Size;
 	_addr = ((0 < addr) and (addr < Max_Address_Number))? addr : oldAddr;
 
 	begin();
@@ -401,10 +401,49 @@ void Line::onReceive(void (*callback)(bool *)){
 
 int sendLineCode(int code, int addr){
 
+	int responseCode = Line_Code_Null;
 
+	bool isMaster = (_addr == Line_Master_Address);
+	bool isSlave = ((Line_Min_Slave_Address <= _addr) and (_addr <= Line_Min_Slave_Address));
+
+	bool addrValid = ((isMaster) or (isSlave));
+	bool supportCodes = ((_transmisionMode == Line_I2C_Extra_Mode) or (_transmisionMode == Line_Spi_Extra_Mode));
+
+	int bitdelay = 1000 / Line_Code_Time;
+
+
+
+	if ((addrValid) and (supportCodes)){
+
+		for (int i = 0; i <= Line_Code_Buffer_Size; i++){
+
+			IOWrite(_pinOut[1], data[i]);
+			TimeWait(bitdelay / 2);
+
+			IOWrite(_pinOut[0], HIGH);
+			TimeWait(bitdelay / 2);
+            
+			IOWrite(_pinOut[0], LOW);
+
+		}
+
+		IOWrite(_pinOut[1], LOW);
+	}
+
+	else if ((addr == _addr) and (supportCodes)){
+
+		responseCode = Line_Code_Conect;
+	}
+
+	else{
+
+		responseCode = Line_Code_Null;
+	}
+
+	return responseCode;
 }
 
 void readInterupt(){
 
-	
+
 }

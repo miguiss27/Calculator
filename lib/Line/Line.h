@@ -13,7 +13,7 @@ private:
 	int _transmisionMode;
 	int _bps;
 	int _addr;
-	int _conectedAddr[Max_Conected_Devices];
+	int _conectedAddr[Line_Max_Conected_Devices];
 	int _codeReceived;
 	bool *_buffer;
 
