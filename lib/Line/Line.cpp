@@ -403,8 +403,8 @@ int sendLineCode(int code, int addr){
 
 	int responseCode = Line_Code_Null;
 
-	bool isMaster = (_addr == Line_Master_Address);
-	bool isSlave = ((Line_Min_Slave_Address <= _addr) and (_addr <= Line_Min_Slave_Address));
+	bool isMaster = (addr == Line_Master_Address);
+	bool isSlave = ((Line_Min_Slave_Address <= addr) and (addr <= Line_Min_Slave_Address));
 
 	bool addrValid = ((isMaster) or (isSlave));
 	bool supportCodes = ((_transmisionMode == Line_I2C_Extra_Mode) or (_transmisionMode == Line_Spi_Extra_Mode));
@@ -430,7 +430,7 @@ int sendLineCode(int code, int addr){
 		IOWrite(_pinOut[1], LOW);
 	}
 
-	else if ((addr == _addr) and (supportCodes)){
+	else if ((addr == _addr)){
 
 		responseCode = Line_Code_Conect;
 	}
