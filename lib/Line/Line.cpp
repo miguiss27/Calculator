@@ -399,6 +399,12 @@ void Line::onReceive(void (*callback)(bool *)){
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+//
 
 
-int sendLineCode(int code, int addr){}
+int sendLineCode(int code, int addr){
 
-void readInterupt(){}
+
+}
+
+void readInterupt(){
+
+	
+}
