@@ -4,6 +4,8 @@
 #ifndef Line_h
 #define Line_h
 
+int suportCodes[Line_Max_Transmision_Mode] = Line_Suport_Codes;
+
 class Line
 {
 
@@ -32,6 +34,7 @@ public:
 	bool conect(int device);
 	bool disconect(int device);
 
+	bool isConected();
 	bool isConected(int device);
 	void waitConection(int device);
 
