@@ -4,7 +4,7 @@ Line::Line(int *pinout, int *pinin, int transmisionmode, int bps, int addr){
 
 	for (int i; i < Line_Max_Conected_Devices; i++){
 
-		_conectedAddr[i] = 0;
+		_conectedAddr[i] = Line_Null_Address;
 	}
 
 	changeSetings(pinout,pinin,transmisionmode,bps,addr);
@@ -150,7 +150,7 @@ bool Line::conect(int device){
 
 	for (int i = 0; i < Line_Max_Conected_Devices; i++){
 
-		if (_conectedAddr[i] == 0){
+		if (_conectedAddr[i] == Line_Null_Address){
 
 			index = i;
 			break;
@@ -171,17 +171,20 @@ bool Line::conect(int device){
 bool Line::disconect(int device){
 
 	int returnCode;
-
-	for (int i = 0; i < Line_Max_Conected_Devices; i++){
-
-		if (_conectedAddr[i] == device) _conectedAddr[i] = 0;
-
-	}
 		
 	returnCode = sendLineCode(Line_Code_Disconect,device);
 
 
-	if (returnCode == Line_Code_Disconect) return true;
+	if (returnCode == Line_Code_Disconect){
+		
+		for (int i = 0; i < Line_Max_Conected_Devices; i++){
+
+			if (_conectedAddr[i] == device) _conectedAddr[i] = Line_Null_Address;
+
+		}
+
+		return true;
+	}
 
 	else return false;
 }
@@ -194,7 +197,7 @@ bool Line::disconect(int device){
 
 bool Line::isConected(){
 
-	for (int i; i < Line_Max_Conected_Devices; i++){
+	for (int i = 0; i < Line_Max_Conected_Devices; i++){
 
 		if (sendLineCode(Line_Code_Conect,_conectedAddr[i]) == Line_Code_Conect){
 
@@ -230,7 +233,7 @@ void Line::waitConection(int device){
 
 bool Line::write(bool * data, int device){
 
-	int bitdelay = (1000 / _bps);
+	int bitdelay = (Line_Second / _bps);
 	
 	int datasize = (sizeof(data) / sizeof(data[0]));
 
@@ -397,6 +400,7 @@ void Line::onReceive(void (*callback)(bool *)){
 int sendLineCode(int code, int addr){
 
 	int responseCode = Line_Code_Null;
+	bool *binaryCode = codeToBinary(code);
 
 	bool isMaster = (addr == Line_Master_Address);
 	bool isSlave = ((Line_Min_Slave_Address <= addr) and (addr <= Line_Max_Slave_Address));
@@ -406,7 +410,7 @@ int sendLineCode(int code, int addr){
 	int bitdelay = Line_Second / Line_Code_BPS;
 	int codePin = Line_Pin_CLK + 1;
 
-	/*switch (_transmisionMode){
+	switch (_transmisionMode){
 
 	case Line_I2C_Extra_Mode:
 
@@ -422,23 +426,22 @@ int sendLineCode(int code, int addr){
 	}
 	
 
-
-
+	/*
 	if ((addrValid)){
 
 		for (int i = 0; i <= Line_Code_Buffer_Size; i++){
 
-			IOWrite(_pinOut[1], data[i]);
+			IOWrite(_pinOut[codePin], binaryCode[i]);
 			TimeWait(bitdelay / 2);
 
-			IOWrite(_pinOut[0], HIGH);
+			IOWrite(_pinOut[Line_Pin_CLK], HIGH);
 			TimeWait(bitdelay / 2);
             
-			IOWrite(_pinOut[0], LOW);
+			IOWrite(_pinOut[Line_Pin_CLK], LOW);
 
 		}
 
-		IOWrite(_pinOut[1], LOW);
+		IOWrite(_pinOut[codePin], LOW);
 	}
 
 	else if (addr == _addr){
@@ -452,9 +455,44 @@ int sendLineCode(int code, int addr){
 	}
 
 	return responseCode;
-*/}
+}*/
 
 void readInterupt(){
 
 
 }
+
+bool * codeToBinary(int num){ 
+
+    bool binaryNum[Line_Max_Binary_Code_Lenght]; 
+
+	for (int j = 0; j < Line_Max_Binary_Code_Lenght; j++){
+
+		binaryNum[j] = 0;
+	}
+	
+   
+    int i = 0;
+
+    while (0 < num) { 
+  
+        binaryNum[i] = num % 2; 
+        num = num / 2; 
+        i++; 
+    } 
+
+	int start = 0;
+	int end = Line_Max_Binary_Code_Lenght - 1;
+
+	while (start < end){
+
+        int temp = binaryNum[start];  
+        binaryNum[start] = binaryNum[end]; 
+        binaryNum[end] = temp;
+
+        start++; 
+        end--; 
+    }
+
+	return binaryNum;
+} 

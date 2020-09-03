@@ -4,8 +4,6 @@
 #ifndef Line_h
 #define Line_h
 
-int suportCodes[Line_Max_Transmision_Mode] = Line_Suport_Codes;
-
 class Line
 {
 
@@ -40,11 +38,11 @@ public:
 
 
 	bool write(bool *data, int device);
-	bool *read(int bits);
-	bool *transfer(bool *data, int device);
+	bool * read(int bits);
+	bool * transfer(bool *data, int device);
 
 	void Request(int device);
-	bool *Request(int device, bool *data);
+	bool * Request(int device, bool *data);
 
 	void onRequest(void (*callback)(bool *));
 	void onReceive(void (*callback)(bool *));
