@@ -281,7 +281,7 @@ void Data::newdata(bool *data_in, int data_size){
 
 void Data::updatedata(bool *data_in){
 
-    for (int i = 0; i <= (sizeof(data_in)/sizeof(data_in[0])); i++){
+    for (int i = 0; i <= Dat_store.size; i++){
 		Dat_store.container[i] = data_in[i];
 	}
 
