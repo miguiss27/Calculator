@@ -1,5 +1,5 @@
 ## Software para calculadora Diy
-### Versión 2.1
+### Versión 0.1
 ### Autor: Miguel S.S.
 #### Características de la interfaz:
 * Teclas de uso: *1,2,3,4,q,w,e,r,a,s,d,f,z,x,c,v*
